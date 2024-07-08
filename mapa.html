@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KAM</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+  <style>
+    #map {
+      height: 800px;
+    }
+    .leaflet-control-geocoder-form input[type="text"] {
+      width: 300px; /* Zmieniona szerokość pola tekstowego */
+      padding: 10px; /* Zwiększony padding */
+      font-size: 16px; /* Zwiększona czcionka */
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div id="geojson-data"></div> <!-- Div do wyświetlenia danych GeoJSON -->
+
+  <script src="https://cdn.jsdelivr.net/npm/leaflet/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+  <script>
+    var map = L.map('map');
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: 'Dla DST :-) <a href="https://www.openstreetmap.org/">OpenStreetMap</a> pomogło',
+      maxZoom: 18,
+    }).addTo(map);
+
+    // Ustawiamy granice mapy na obszar Polski
+    var southWest = L.latLng(49.00, 14.00), // Południowo-zachodni punkt granic Polski
+        northEast = L.latLng(55.05, 24.15), // Północno-wschodni punkt granic Polski
+        bounds = L.latLngBounds(southWest, northEast);
+
+    map.fitBounds(bounds); // Dopasowujemy mapę do granic Polski
+
+    // Funkcja obsługująca zdarzenie "load", która zapobiega przewijaniu mapy poza granice Polski
+    map.on('load', function() {
+      map.setMaxBounds(bounds);
+    });
+
+    // Dodajemy kontrolkę do wyszukiwania miast
+    L.Control.geocoder({placeholder: "Wyszukaj miejscowość..."}).addTo(map); // Dodajemy atrybut placeholder dla pola tekstowego
+
+    // Wczytaj plik GeoJSON z podanego linku
+    var geojsonLayer = L.geoJSON().addTo(map);
+    fetch('https://gist.githubusercontent.com/nekroflak/90277d850a02049505bf97dd2c9fdeef/raw/0c247118cf65d0c61ff42dd6c7f819c74190bd29/gistfile1.json')
+      .then(response => response.json())
+      .then(data => {
+        geojsonLayer.addData(data);
+        var polygon = L.geoJSON(data).addTo(map);
+        polygon.bindTooltip("Sieradz, Wójcik",
+          {permanent: false, direction:"center"}
+        ).openTooltip();
+      })
+      .catch(error => console.error('Błąd podczas pobierania danych GeoJSON:', error));
+
+    var geojsonLayer = L.geoJSON().addTo(map);
+    fetch('https://gist.githubusercontent.com/nekroflak/0b4d0d7852ed2ca7f28b3737cf0f4a8d/raw/b3180be2e7c6cc1e993fc5baf737d54f00b3bace/gistfile1.json')
+      .then(response => response.json())
+      .then(data => {
+        geojsonLayer.addData(data);
+        var polygon = L.geoJSON(data).addTo(map);
+        polygon.bindTooltip("Szota, Dębicka, Osika, Cholewa",
+          {permanent: false, direction:"center"}
+        ).openTooltip();
+      })
+      .catch(error => console.error('Błąd podczas pobierania danych GeoJSON:', error));
+
+    var geojsonLayer = L.geoJSON().addTo(map);
+    fetch('https://gist.githubusercontent.com/nekroflak/953c5142079914d1264c935ceaded468/raw/5084adbbb1a852caf48afc204624d4c72264532f/gistfile1.json')
+      .then(response => response.json())
+      .then(data => {
+        geojsonLayer.addData(data);
+        var polygon = L.geoJSON(data).addTo(map);
+        polygon.bindTooltip("Motus, Olcza, Boldys, Koszewski, Jakubczyk",
+          {permanent: false, direction:"center"}
+        ).openTooltip();
+      })
+      .catch(error => console.error('Błąd podczas pobierania danych GeoJSON:', error));
+
+    var geojsonLayer = L.geoJSON().addTo(map);
+    fetch('https://gist.githubusercontent.com/nekroflak/38f48b87f01ed4906ba476944933c5a6/raw/aede39903a3d50681b9a0b65351fed1715a86429/gistfile1.json')
+      .then(response => response.json())
+      .then(data => {
+        geojsonLayer.addData(data);
+        var polygon = L.geoJSON(data).addTo(map);
+        polygon.bindTooltip("Sochacki, Urbas, Sikora, Klim",
+          {permanent: false, direction:"center"}
+        ).openTooltip();
+      })
+      .catch(error => console.error('Błąd podczas pobierania danych GeoJSON:', error));
+
+    var geojsonLayer = L.geoJSON().addTo(map);
+    fetch('https://gist.githubusercontent.com/nekroflak/7093ce1322339a6e057200a47a51b142/raw/39efa4c41a3c8f9efc998e000053e61e4b6e069e/gistfile1.json')
+      .then(response => response.json())
+      .then(data => {
+        geojsonLayer.addData(data);
+        var polygon = L.geoJSON(data).addTo(map);
+        polygon.bindTooltip("Jagusiak, Ender, Bołwan, Makulski",
+          {permanent: false, direction:"center"}
+        ).openTooltip();
+      })
+      .catch(error => console.error('Błąd podczas pobierania danych GeoJSON:', error));
+
+    
+    var geojsonLayer = L.geoJSON().addTo(map);
+    fetch('')
+      .then(response => response.json())
+      .then(data => {
+        geojsonLayer.addData(data);
+        var polygon = L.geoJSON(data).addTo(map);
+        polygon.bindTooltip("Robert Wójcik, Ania Ender",
+          {permanent: false, direction:"center"}
+        ).openTooltip();
+      })
+      .catch(error => console.error('Błąd podczas pobierania danych GeoJSON:', error));
+  </script>
+</body>
+</html>
