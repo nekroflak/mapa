@@ -74,7 +74,7 @@
       .then(data => {
         geojsonLayer.addData(data);
         var polygon = L.geoJSON(data).addTo(map);
-        polygon.bindTooltip("Szota, Dębicka, Osika, Cholewa",
+        polygon.bindTooltip("Szota(30/09?), Dębicka, Osika, Cholewa",
           {permanent: false, direction:"center"}
         ).openTooltip();
       })
@@ -86,7 +86,7 @@
       .then(data => {
         geojsonLayer.addData(data);
         var polygon = L.geoJSON(data).addTo(map);
-        polygon.bindTooltip("Motus, Olcza, Boldys, Koszewski, Jakubczyk",
+        polygon.bindTooltip("Motus, Olczak, Boldys, Koszewski, Jakubczyk",
           {permanent: false, direction:"center"}
         ).openTooltip();
       })
@@ -110,7 +110,7 @@
       .then(data => {
         geojsonLayer.addData(data);
         var polygon = L.geoJSON(data).addTo(map);
-        polygon.bindTooltip("Jagusiak, Ender, Bołwan, Makulski",
+        polygon.bindTooltip("Jagusiak(30/08?), Ender(30/08?), Bołwan",
           {permanent: false, direction:"center"}
         ).openTooltip();
       })
