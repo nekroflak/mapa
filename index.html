@@ -115,7 +115,7 @@
       .then(data => {
         geojsonLayer.addData(data);
         var polygon = L.geoJSON(data).addTo(map);
-        polygon.bindTooltip("Jagusiak(30/08?), Ender(30/08?), Bołwan",
+        polygon.bindTooltip("Bołwan",
           {permanent: false, direction:"center"}
         ).openTooltip();
       })
