@@ -79,7 +79,7 @@
       .then(data => {
         geojsonLayer.addData(data);
         var polygon = L.geoJSON(data).addTo(map);
-        polygon.bindTooltip("Dębicka, Osika",
+        polygon.bindTooltip("Boldys, Dębicka, Osika, Szota (31/10)",
           {permanent: false, direction:"center"}
         ).openTooltip();
       })
@@ -91,7 +91,7 @@
       .then(data => {
         geojsonLayer.addData(data);
         var polygon = L.geoJSON(data).addTo(map);
-        polygon.bindTooltip("Motus, Olczak, Boldys, Koszewski, Jakubczyk",
+        polygon.bindTooltip("Motus, Olczak, Koszewski, Jakubczyk",
           {permanent: false, direction:"center"}
         ).openTooltip();
       })
