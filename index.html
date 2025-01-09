@@ -67,7 +67,7 @@
       .then(data => {
         geojsonLayer.addData(data);
         var polygon = L.geoJSON(data).addTo(map);
-        polygon.bindTooltip("Sieradz, Wójcik + dwóch nowych",
+        polygon.bindTooltip("Sieradz, Wójcik, Gulatowski, Karwowski",
           {permanent: false, direction:"center"}
         ).openTooltip();
       })
