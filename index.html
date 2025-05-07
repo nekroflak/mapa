@@ -67,7 +67,7 @@
       .then(data => {
         geojsonLayer.addData(data);
         var polygon = L.geoJSON(data).addTo(map);
-        polygon.bindTooltip("Sieradz, Wójcik, Gulatowski, Karwowski",
+        polygon.bindTooltip("Sieradz (Office), Wójcik, Gulatowski, Karwowski",
           {permanent: false, direction:"center"}
         ).openTooltip();
       })
@@ -79,7 +79,7 @@
       .then(data => {
         geojsonLayer.addData(data);
         var polygon = L.geoJSON(data).addTo(map);
-        polygon.bindTooltip("Boldys, Dębicka, Osika, Szota",
+        polygon.bindTooltip("Boldys, Dębicka(Office), Osika, Szota",
           {permanent: false, direction:"center"}
         ).openTooltip();
       })
@@ -115,7 +115,7 @@
       .then(data => {
         geojsonLayer.addData(data);
         var polygon = L.geoJSON(data).addTo(map);
-        polygon.bindTooltip("Bołwan, Tantlewicz, Nezai",
+        polygon.bindTooltip("Bołwan, Tantlewicz, Sławiński",
           {permanent: false, direction:"center"}
         ).openTooltip();
       })
