@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,120 +9,327 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 
   <style>
-    html, body { height: 100%; margin:0; padding:0; }
-    #map { height: 100%; width: 100%; }
-
-    #side-panel {
-      position: absolute; bottom:20px; left:20px; width:280px;
-      background: rgba(255,255,255,0.95); padding:10px; border-radius:10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3); font-family: Arial,sans-serif;
-      max-height:400px; overflow-y:auto; z-index:9999;
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
     }
-    #side-panel h3 { margin:0 0 10px 0; font-size:18px; }
+    #map {
+      height: 100%;
+      width: 100%;
+    }
+    .leaflet-control-geocoder-form input[type="text"] {
+      width: 300px;
+      padding: 10px;
+      font-size: 16px;
+    }
 
-    .region { margin-top:10px; cursor:pointer; font-weight:bold; padding:5px;
-      border-radius:5px; background:#f0f0f0; }
-    .region:hover { background:#e0e0e0; }
-    .names { margin-left:15px; margin-top:5px; display:none; }
+    /* PANEL W LEWYM DOLNYM ROGU */
+    #side-panel {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      width: 320px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      font-family: Arial, sans-serif;
+      max-height: 60vh;
+      overflow-y: auto;
+      z-index: 9999;
+    }
+
+    #side-panel h3 {
+      margin: 0 0 10px 0;
+      font-size: 18px;
+    }
+
+    .region {
+      margin-top: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      padding: 8px;
+      border-radius: 5px;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    .region .title {
+      flex: 1;
+    }
+
+    .region .caret {
+      margin-left: 8px;
+      opacity: 0.9;
+    }
+
+    .region:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    }
+
+    /* Podświetlenie regionu w panelu gdy hover na mapie */
+    .region.highlight {
+      box-shadow: 0 10px 26px rgba(0,0,0,0.2);
+      transform: translateY(-3px) scale(1.01);
+      outline: 2px solid rgba(43,123,211,0.15);
+    }
+
+    .names {
+      margin-left: 0;
+      margin-top: 5px;
+      display: none;
+      padding-left: 5px;
+      border-radius: 5px;
+    }
+
+    .names div {
+      padding: 5px;
+      margin-bottom: 2px;
+      background: rgba(255,255,255,0.02);
+      border-radius: 4px;
+      color: #111;
+    }
+
+    /* Stonowane kolory dla regionów (tylko nagłówki .region) */
+    .lubuskie-region { background-color:  #6bb0c4; }   /* niebieski */
+    .pomorskie-region { background-color: #6bc48c; }   /* zielony  */
+    .mazowieckie-region { background-color: #c46b6b; } /* czerwony */
+    .swietokrzyskie-region { background-color: #c4a36b; } /* żółtawy */
+    .dolnoslaskie-region { background-color: #a36bc4; } /* fiolet  */
+
+    /* Kolory dla Office i Łódzkie – jasne tło i ciemny tekst */
+    .office-region, .lodzkie-region {
+      background-color: #f0f0f0;
+      color: #333;
+    }
   </style>
 </head>
+
 <body>
-<div id="map"></div>
+  <div id="map"></div>
 
-<div id="side-panel">
-<h3>KAM na region ▼</h3>
+  <div id="side-panel">
+    <h3>KAM na region ▼</h3>
 
-<div class="region">Lubuskie | Zachodniopomorskie | Wielkopolskie</div>
-<div class="names">• Sochacki<br>• Urbas<br>• Klim<br>• Sikora</div>
+    <!-- Dodane data-key do jednoznacznego mapowania -->
+    <div class="region lubuskie-region" data-key="lubuskie">
+      <span class="title">Lubuskie | Zachodniopomorskie | Wielkopolskie</span>
+      <span class="caret">▾</span>
+    </div>
+    <div class="names">
+      <div>• Sochacki</div>
+      <div>• Urbas</div>
+      <div>• Klim</div>
+      <div>• Sikora</div>
+    </div>
 
-<div class="region">Pomorskie | Kujawsko-Pomorskie | Warmińsko-Mazurskie</div>
-<div class="names">• Bołwan<br>• Tantlewicz<br>• Kunz</div>
+    <div class="region pomorskie-region" data-key="pomorskie">
+      <span class="title">Pomorskie | Kujawsko-Pomorskie | Warmińsko-Mazurskie</span>
+      <span class="caret">▾</span>
+    </div>
+    <div class="names">
+      <div>• Bołwan</div>
+      <div>• Tantlewicz</div>
+      <div>• Kunz</div>
+    </div>
 
-<div class="region">Podlaskie | Mazowieckie</div>
-<div class="names">• Wójcik<br>• Karwowski<br>• Krupiński<br>• Pawłowski<br>• Nesterowicz</div>
+    <div class="region mazowieckie-region" data-key="mazowieckie">
+      <span class="title">Podlaskie | Mazowieckie</span>
+      <span class="caret">▾</span>
+    </div>
+    <div class="names">
+      <div>• Wójcik</div>
+      <div>• Karwowski</div>
+      <div>• Krupiński</div>
+      <div>• Pawłowski</div>
+      <div>• Nesterowicz</div>
+    </div>
 
-<div class="region">Świętokrzyskie | Lubelskie | Małopolskie | Podkarpackie</div>
-<div class="names">• Osika<br>• Szota<br>• Boldys<br>• Grunt<br>• Kaczmarski</div>
+    <div class="region swietokrzyskie-region" data-key="swietokrzyskie">
+      <span class="title">Świętokrzyskie | Lubelskie | Małopolskie | Podkarpackie</span>
+      <span class="caret">▾</span>
+    </div>
+    <div class="names">
+      <div>• Osika</div>
+      <div>• Szota</div>
+      <div>• Boldys</div>
+      <div>• Grunt</div>
+      <div>• Kaczmarski</div>
+    </div>
 
-<div class="region">Dolnośląskie | Opolskie | Śląskie</div>
-<div class="names">• Motus-Zatoka<br>• Koszewski<br>• Olczak<br>• Jakubczyk</div>
+    <div class="region dolnoslaskie-region" data-key="dolnoslaskie">
+      <span class="title">Dolnośląskie | Opolskie | Śląskie</span>
+      <span class="caret">▾</span>
+    </div>
+    <div class="names">
+      <div>• Motus-Zatoka</div>
+      <div>• Koszewski</div>
+      <div>• Olczak</div>
+      <div>• Jakubczyk</div>
+    </div>
 
-<div class="region">Office</div>
-<div class="names">
-• Kamińska - Trojmiasto | Poznań | Wrocław<br>
-• Dębicka - Kraków | Katowice<br>
-• Sieradz - Warszawa<br>
-• Szkólski - Łódź
-</div>
-</div>
+    <div class="region office-region" data-key="office">
+      <span class="title">Office</span>
+      <span class="caret">▾</span>
+    </div>
+    <div class="names">
+      <div>• Kamińska - Trojmiasto | Poznań | Wrocław</div>
+      <div>• Dębicka - Kraków | Katowice</div>
+      <div>• Sieradz - Warszawa</div>
+      <div>• Szkólski - Łódź</div>
+    </div>
 
-<script src="https://cdn.jsdelivr.net/npm/leaflet/dist/leaflet.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <div class="region lodzkie-region" data-key="lodzkie">
+      <span class="title">ŁÓDZKIE - Dla każdego KAM'a</span>
+      <span class="caret">▾</span>
+    </div>
+    <div class="names">
+      <div>• Bołwan jest z Łodzi, dawajmy mu tam jak możemy xd</div>
+    </div>
+  </div>
 
-<script>
-var map = L.map('map');
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:18, attribution:'OpenStreetMap'}).addTo(map);
-var southWest=L.latLng(49,14), northEast=L.latLng(55.05,24.15), bounds=L.latLngBounds(southWest,northEast);
-map.fitBounds(bounds); map.setMaxBounds(bounds);
-L.Control.geocoder({placeholder:"Wyszukaj miejscowość..."}).addTo(map);
+  <script src="https://cdn.jsdelivr.net/npm/leaflet/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
-document.querySelectorAll('.region').forEach(el=>{
-  el.addEventListener('click',()=>{
-    const next=el.nextElementSibling;
-    next.style.display = next.style.display==='block'?'none':'block';
-  });
-});
+  <script>
+    // --- MAPA ---
+    var map = L.map('map');
 
-// ======= GEOJSON 1 =======
-fetch('https://gist.githubusercontent.com/nekroflak/90277d850a02049505bf97dd2c9fdeef/raw/0c247118cf65d0c61ff42dd6c7f819c74190bd29/gistfile1.json')
-  .then(res=>res.json())
-  .then(data=>{
-    L.geoJSON(data,{style:{color:'red',weight:2,fillOpacity:0.3}})
-      .addTo(map)
-      .bindTooltip("Sieradz, Szkólski (Office), Nesterowicz, Wójcik, Karwowski, Krupiński, Pawłowski",{permanent:false,direction:"center"})
-      .openTooltip();
-  });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: 'Dla SDR <a href="https://www.openstreetmap.org/">OpenStreetMap</a> pomogło',
+      maxZoom: 18,
+    }).addTo(map);
 
-// ======= GEOJSON 2 =======
-fetch('https://gist.githubusercontent.com/nekroflak/0b4d0d7852ed2ca7f28b3737cf0f4a8d/raw/b3180be2e7c6cc1e993fc5baf737d54f00b3bace/gistfile1.json')
-  .then(res=>res.json())
-  .then(data=>{
-    L.geoJSON(data,{style:{color:'blue',weight:2,fillOpacity:0.3}})
-      .addTo(map)
-      .bindTooltip("Boldys, Dębicka(Office), Osika, Szota, Grunt, Kaczmarski",{permanent:false,direction:"center"})
-      .openTooltip();
-  });
+    var southWest = L.latLng(49.00, 14.00),
+        northEast = L.latLng(55.05, 24.15),
+        bounds = L.latLngBounds(southWest, northEast);
 
-// ======= GEOJSON 3 =======
-fetch('https://gist.githubusercontent.com/nekroflak/953c5142079914d1264c935ceaded468/raw/5084adbbb1a852caf48afc204624d4c72264532f/gistfile1.json')
-  .then(res=>res.json())
-  .then(data=>{
-    L.geoJSON(data,{style:{color:'green',weight:2,fillOpacity:0.3}})
-      .addTo(map)
-      .bindTooltip("Motus, Olczak, Koszewski, Jakubczyk, (Angelika Kamińska Office)",{permanent:false,direction:"center"})
-      .openTooltip();
-  });
+    map.fitBounds(bounds);
+    map.on('load', function() {
+      map.setMaxBounds(bounds);
+    });
 
-// ======= GEOJSON 4 =======
-fetch('https://gist.githubusercontent.com/nekroflak/38f48b87f01ed4906ba476944933c5a6/raw/aede39903a3d50681b9a0b65351fed1715a86429/gistfile1.json')
-  .then(res=>res.json())
-  .then(data=>{
-    L.geoJSON(data,{style:{color:'orange',weight:2,fillOpacity:0.3}})
-      .addTo(map)
-      .bindTooltip("Sochacki, Urbas, Sikora, Klim, (A.Kamińska Office)",{permanent:false,direction:"center"})
-      .openTooltip();
-  });
+    L.Control.geocoder({placeholder: "Wyszukaj miejscowość..."}).addTo(map);
 
-// ======= GEOJSON 5 =======
-fetch('https://gist.githubusercontent.com/nekroflak/7093ce1322339a6e057200a47a51b142/raw/39efa4c41a3c8f9efc998e000053e61e4b6e069e/gistfile1.json')
-  .then(res=>res.json())
-  .then(data=>{
-    L.geoJSON(data,{style:{color:'purple',weight:2,fillOpacity:0.3}})
-      .addTo(map)
-      .bindTooltip("Bołwan, Tantlewicz, Kunz (Angelika Kamińska Office)",{permanent:false,direction:"center"})
-      .openTooltip();
-  });
-</script>
+    // --- PANEL: rozwijane listy (prosta wersja jak wcześniej) ---
+    const panelRegions = Array.from(document.querySelectorAll('.region'));
+    const panelKeys = panelRegions.map(el => el.dataset.key);
+    const panelNames = panelRegions.map(el => el.nextElementSibling);
 
+    panelRegions.forEach(region => {
+      region.addEventListener('click', () => {
+        const next = region.nextElementSibling;
+        if (!next || !next.classList.contains('names')) return;
+        next.style.display = next.style.display === "block" ? "none" : "block";
+      });
+    });
+
+    // --- HOVER: map <-> panel ---
+    function createHighlightHandlers(layerGroup, color, panelIndex) {
+      const panelEl = panelRegions[panelIndex];
+
+      const defaultStyle = { color: color, weight: 2, fillOpacity: 0.2 };
+
+      function setHighlight(on) {
+        if (!layerGroup) return;
+        if (on) {
+          layerGroup.setStyle({
+            color: color,             // użyj tego samego koloru
+            weight: 4,
+            fillOpacity: 0.6
+          });
+          try { layerGroup.bringToFront(); } catch(e){}
+          if (panelEl) panelEl.classList.add('highlight');
+        } else {
+          layerGroup.setStyle(defaultStyle);
+          if (panelEl) panelEl.classList.remove('highlight');
+        }
+      }
+
+      // map -> panel (po polygonie)
+      layerGroup.eachLayer(function (featureLayer) {
+        featureLayer.on('mouseover', () => setHighlight(true));
+        featureLayer.on('mouseout', () => setHighlight(false));
+        featureLayer.on('click', () => {
+          try { map.fitBounds(featureLayer.getBounds(), { maxZoom: 12, padding: [20,20] }); } catch(e){}
+        });
+      });
+
+      // panel -> map
+      if (panelEl) {
+        panelEl.addEventListener('mouseenter', () => setHighlight(true));
+        panelEl.addEventListener('mouseleave', () => setHighlight(false));
+      }
+    }
+
+    // --- Funkcja dodająca GeoJSON, z ręcznym przypisaniem do konkretnego panelu ---
+    function addGeoJSON(url, tooltipText, color, panelKey) {
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          const layerGroup = L.geoJSON(data, {
+            style: { color: color, weight: 2, fillOpacity: 0.2 }
+          }).addTo(map);
+
+          layerGroup.bindTooltip(tooltipText, {permanent:false,direction:"center"});
+
+          // znajdź index panelu po data-key
+          const idx = panelKeys.indexOf(panelKey);
+          if (idx !== -1) {
+            createHighlightHandlers(layerGroup, color, idx);
+          } else {
+            console.warn('Nie znaleziono panelu dla key:', panelKey);
+          }
+        })
+        .catch(err => {
+          console.warn('Błąd ładowania GeoJSON', url, err);
+        });
+    }
+
+    // --- RĘCZNE, POPRAWNE MAPOWANIE REGIONÓW ---
+    // tutaj na 100% mówimy: który polygon = który panel (po data-key)
+    // kolory są spójne z klasami CSS
+    addGeoJSON(
+      'https://gist.githubusercontent.com/nekroflak/90277d850a02049505bf97dd2c9fdeef/raw/0c247118cf65d0c61ff42dd6c7f819c74190bd29/gistfile1.json',
+      "Sieradz, Szkólski (Office), Nesterowicz, Wójcik, Karwowski, Krupiński, Pawłowski",
+      '#c46b6b',  // czerwony
+      'mazowieckie'
+    );
+
+    addGeoJSON(
+      'https://gist.githubusercontent.com/nekroflak/0b4d0d7852ed2ca7f28b3737cf0f4a8d/raw/b3180be2e7c6cc1e993fc5baf737d54f00b3bace/gistfile1.json',
+      "Boldys, Dębicka(Office), Osika, Szota, Grunt, Kaczmarski",
+      '#c4a36b',  // żółtawy
+      'swietokrzyskie'
+    );
+
+    addGeoJSON(
+      'https://gist.githubusercontent.com/nekroflak/953c5142079914d1264c935ceaded468/raw/5084adbbb1a852caf48afc204624d4c72264532f/gistfile1.json',
+      "Motus, Olczak, Koszewski, Jakubczyk, (Angelika Kamińska Office)",
+      '#a36bc4',  // fiolet
+      'dolnoslaskie'
+    );
+
+    addGeoJSON(
+      'https://gist.githubusercontent.com/nekroflak/38f48b87f01ed4906ba476944933c5a6/raw/aede39903a3d50681b9a0b65351fed1715a86429/gistfile1.json',
+      "Sochacki, Urbas, Sikora, Klim, (A.Kamińska Office)",
+      '#6bb0c4',  // niebieski
+      'lubuskie'
+    );
+
+    addGeoJSON(
+      'https://gist.githubusercontent.com/nekroflak/7093ce1322339a6e057200a47a51b142/raw/39efa4c41a3c8f9efc998e000053e61e4b6e069e/gistfile1.json',
+      "Bołwan, Tantlewicz, Kunz (Angelika Kamińska Office)",
+      '#6bc48c',  // zielony
+      'pomorskie'
+    );
+  </script>
 </body>
 </html>
